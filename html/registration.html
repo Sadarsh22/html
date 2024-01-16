@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="../js/validationUsingJquery.js"></script>
+    <form name="applicationForm" id="applicationForm" method="post" action="">
+      <table border="2" bordercolor="orange" align="center">
+        <th colspan="2">Application Form</th>
+        <tr>
+          <td align="middle">First_Name</td>
+          <td>
+            <input type="text" name="First_Name" id="First_Name" value="" />
+            <br />
+            <span id="SFirst_Name"></span>
+          </td>
+        </tr>
+        <tr>
+          <td align="middle">Last_Name</td>
+          <td>
+            <input type="text" name="Last_Name" id="Last_Name" value="" />
+            <br />
+            <span id="SLast_Name"></span>
+          </td>
+        </tr>
+        <tr>
+          <td align="middle" valign="top">Address</td>
+          <td>
+            <textarea name="address" id="address"></textarea>
+            <br />
+            <span id="SAddress"></span>
+          </td>
+        </tr>
+        <tr>
+          <td align="middle">Email</td>
+          <td>
+            <input type="email" name="email" id="email" value="" />
+            <br />
+            <span id="SEmail"></span>
+          </td>
+        </tr>
+        <tr>
+          <td align="middle">Phone</td>
+          <td>
+            <input type="text" name="Phone" id="Phone" value="" />
+            <br />
+            <span id="SPhone"></span>
+          </td>
+        </tr>
+        <tr>
+          <td align="middle">Gender</td>
+          <td>
+            <input type="radio" name="Gender" class="Gender" value="1" />Male
+            <input type="radio" name="Gender" class="Gender" value="2" />Female
+            <br />
+            <span id="SGender"></span>
+          </td>
+        </tr>
+        <tr>
+          <td align="middle">Date of Birth</td>
+          <td>
+            <input type="date" id="dob" name="dob" />
+            <br />
+            <span id="SDob"></span>
+          </td>
+        </tr>
+        <tr>
+          <td align="middle">Language</td>
+          <td>
+            <input
+              type="checkbox"
+              name="Language"
+              class="Language"
+              value="1"
+            />English
+            <input
+              type="checkbox"
+              name="Language"
+              class="Language"
+              value="2"
+            />Hindi
+            <input
+              type="checkbox"
+              name="Language"
+              class="Language"
+              value="3"
+            />Bengali
+            <br />
+            <span id="SLanguage"></span>
+          </td>
+        </tr>
+        <tr>
+          <td align="middle">Country</td>
+          <td>
+            <select name="Country" id="Country">
+              <option value="0">--Select--</option>
+              <option value="1">India</option>
+              <option value="2">Nepal</option>
+              <option value="3">China</option>
+              <option value="4">USA</option>
+              <option value="5">Russia</option>
+              <option value="6">Other</option>
+            </select>
+            <br />
+            <span id="SCountry"></span>
+          </td>
+        </tr>
+        <tr>
+          <td align="middle">File</td>
+          <td>
+            <input type="file" name="File" id="File" value="" />
+            <br />
+            <span id="SFile"></span>
+          </td>
+        </tr>
+        <tr>
+          <td align="middle">Password</td>
+          <td>
+            <input type="password" name="password" id="password" value="" />
+            <br />
+            <span id="SPassword"></span>
+          </td>
+        </tr>
+        <tr>
+          <td align="middle">Confirm Password</td>
+          <td>
+            <input
+              type="password"
+              name="confirmPassword"
+              id="confirmPassword"
+              value=""
+            />
+            <br />
+            <span id="SConfirmpassword"></span>
+          </td>
+        </tr>
+        <th colspan="2">
+          <a href="Index.html"><button type="button">back</button></a>
+          <input type="submit" name="Submit" id="submit" value="Submit" />
+          <input type="button" name="Reset" id="reset" value="Reset" />
+        </th>
+      </table>
+    </form>
+  </body>
+</html>

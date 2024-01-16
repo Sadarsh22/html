@@ -1,0 +1,179 @@
+<html>
+  <title>Index Page</title>
+  <head>
+  </head>
+  <body align="center">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="../js/index.js"></script>
+    <link rel="stylesheet" href="../css/index.css">
+    <p>
+      <input
+        type="text"
+        name="searchbar"
+        id="searchbar"
+        placeholder="Search"
+      />&nbsp;
+      <input type="button" name="search" id="search" value="Search" />&nbsp;
+      <a href="registration.html"><button>+New</button></a>
+    </p>
+
+    <div id="modal">
+      <h1>User Details</h1>
+      <p id="details">First Name: Keshav</p>
+      <p id="details">Last Name: Bharadwaj</p>
+      <p id="details">Address: 123 Salt Lake Sector V 7000001</p>
+      <p id="details">Email: john.doe@example.com</p>
+      <p id="details">Phone: 1234567890</p>
+      <p id="details">Gender: Male</p>
+      <p id="details">Date Of Birth: 01/01/2000</p>
+      <p id="details">Language: English ,Hindi</p>
+      <p id="details">Country: India</p>
+      <p id="details" style="display: grid;">Profile Picture: <img src="../image/download.jpeg" alt=""></p>
+      <button id="modalButton">Close</button>
+    </div>
+
+
+    <table border="2" bordercolor="orange" align="center" name="info">
+      <tr>
+        <th>
+          <input
+            type="checkbox"
+            id="all"
+            name="all"
+            value="0"
+            onclick="selectAllCheckboxes()"
+          />
+        </th>
+        <th>First Name</th>
+        <th>Last Name</th>
+        <th>Email</th>
+        <th>Phone</th>
+        <th>Image</th>
+        <th>Action</th>
+      </tr>
+
+      <tr>
+        <td>
+          <input
+            type="checkbox"
+            id="all"
+            name="all"
+            value="1"
+            onclick="singleCheckbox()"
+          />
+        </td>
+        <td>Keshav</td>
+        <td>Bharadwaj</td>
+        <td>xyz@gmail.com</td>
+        <td>5453456789</td>
+        <td>
+          <img
+            src="../image/download.jpeg"
+            alt=""
+            srcset=""
+            height="100px"
+            width="100px"
+          />
+        </td>
+        <td>
+          <a href="#" class="view" >View</a> /
+          <a href="#"> Edit </a> /
+            <a href="#" id="Delete" > Delete </a>
+          </a>
+        </td>
+      </tr>
+
+      <tr>
+        <td>
+          <input
+            type="checkbox"
+            id="all"
+            name="all"
+            value="2"
+            onclick="singleCheckbox()"
+          />
+        </td>
+        <td>Sourav</td>
+        <td>Chowdhury</td>
+        <td>abc123@gmail.com</td>
+        <td>23436435362</td>
+        <td>
+          <img
+            src="../image/download.jpeg"
+            alt=""
+            srcset=""
+            height="100px"
+            width="100px"
+          />
+        </td>
+        <td>
+          <a href="#" class="view">View</a> /
+          <a href="#"> Edit </a> /
+          <a href="#" id="Delete"> Delete </a>
+        </td>
+      </tr>
+
+      <tr>
+        <td>
+          <input
+            type="checkbox"
+            id="all"
+            name="all"
+            value="2"
+            onclick="singleCheckbox()"
+          />
+        </td>
+        <td>abhishek</td>
+        <td>singh</td>
+        <td>jhhqike@gmail.com</td>
+        <td>236435362</td>
+        <td>
+          <img
+            src="../image/download.jpeg"
+            alt=""
+            srcset=""
+            height="100px"
+            width="100px"
+          />
+        </td>
+        <td>
+          <a href="#" class="view">View</a> /
+          <a href="#"> Edit </a> /
+          <a href="#" id="Delete"> Delete </a>
+        </td>
+      </tr>
+
+      <tr>
+        <td>
+          <input
+            type="checkbox"
+            id="all"
+            name="all"
+            value="2"
+            onclick="singleCheckbox()"
+          />
+        </td>
+        <td>tinku</td>
+        <td>yadav</td>
+        <td>tinkuji123@gmail.com</td>
+        <td>26436435362</td>
+        <td>
+          <img
+            src="../image/download.jpeg"
+            alt=""
+            srcset=""
+            height="100px"
+            width="100px"
+          />
+        </td>
+        <td>
+          <a href="#" class="view">View</a> /
+          <a href="#"> Edit </a> /
+          <a href="#" id="Delete"> Delete </a>
+        </td>
+      </tr>
+    </table>
+    <br />
+    <button id="deleteAll" onclick="validateDeleteAll()">Delete All</button>
+  </body>
+</html>

@@ -1,0 +1,24 @@
+body {
+  display: flex;
+}
+#add,
+#addMore,
+#abc {
+  padding: 3%;
+} 
+#filter {
+  display: none;
+  position: fixed;
+  border: 1px solid #ccc;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+#btn {
+  background-color: oldlace;
+  margin: 10px;
+  font-size: larger;
+  border-radius: 10px;
+}
+#answer{
+    margin-left: 1px;
+}
