@@ -30,7 +30,7 @@
             // $dob = explode('-',$dob_id);
             // print $dob1= '13/01/2024'; //$dob[2].'/'.$dob[1].'/'.$dob[0];
 
-            // echo($first_name);
+            // echo($country_id);
             
         }
 
@@ -53,10 +53,10 @@
 
     <?php
 
-    include 'login_credentials.php';
+    // include 'login_credentials.php';
     //  ini_set('display_errors',1);
     //  ini_set('display_startup_errors',1);
-    //  error_reporting(E_ALL);
+     error_reporting(E_ALL);
 
     $fname = $_REQUEST['First_Name'];
     $lname = $_REQUEST['Last_Name'];
@@ -64,23 +64,21 @@
     $email = $_REQUEST['email'];
     $phn = $_REQUEST['Phone'];
     $gndr = $_REQUEST['Gender'];
+    echo($gndr_id);
     $dob = $_REQUEST['dob'];
     $lng = $_REQUEST['Language'];
     $cnt = $_REQUEST['Country'];
     $fl = $_REQUEST['File'];
-    echo "$fl<br/>";
     $pswd = md5($_REQUEST['password']);
     $cnfpswd = md5($_REQUEST['confirmPassword']);
 
-
-
     $datecreated = date('Y-m-d').' '.date("h:i:sa");
-
 
     $currentDirectory = getcwd();
     $uploadDirectory = "/uploads/";
 
     $fileName = $_FILES['File']['name'];
+    echo "img is->$fileName";
     $fileTmpName  = $_FILES['File']['tmp_name'];
     $fileExtension = strtolower(end(explode('.', $fileName)));
 
@@ -97,17 +95,35 @@
     //   }
     // }
 
-    if (isset($_POST['Submit'])) {
+    if (isset($_POST['Submit'])  && $mode !='edit' ) {
         $didUpload = move_uploaded_file($fileTmpName, $uploadPath);
     }
 
-    if (isset($_POST['Submit']) && $mode!='edit') {
+    if (isset($_POST['Submit'])  && $mode !='edit') {
         // Create connection
         $conn = new mysqli($hostname, $username, $password, 'adarsh');
         // Check connection
         if ($conn->connect_error) {
             die("Connection failed: " . $conn->connect_error);
         }
+
+        // $email_sql = "select email from customer";
+        // $email_arr = mysqli_num_rows($conn->query($email_sql));
+        
+        // foreach($email_arr as $val)
+        // {
+        //     if($val == $email)
+        //     echo('<script>
+
+        //     alert("hello");
+        //     $("#SEmail").html("Email field should not be empty");
+        //     $("#email").focus();
+        //     $("#email").keypress(function () {
+        //       $("#SEmail").hide();
+        //     });
+        
+        //     </script>');
+        // }
 
         $selectedLng = implode(' ',$lng);
 
@@ -136,23 +152,49 @@
         $selectedLng = implode(' ',$lng);
 
         echo "Connected successfully";
-        $sql = "UPDATE `customer` SET `modified_on_date`=$datecreated,`first_name`=$fname,
-        `last_name`='$lname',`address`=$addr,`email`=$email,`phone`=$phn,
-        `gender`=$gndr,`date_of_birth`=$dob,`language`=$selectedLng,
-        `country`=$cnt,`file_name`=$newFileName, WHERE id=$curr_id";
+
+        $didUpload = move_uploaded_file($fileTmpName, $uploadPath);
+
+        $sql = "UPDATE
+            `customer`
+        SET
+            `modified_on_date` = '$datecreated',
+            `first_name` = '$fname',
+            `last_name` = '$lname',
+            `address` = '$addr',
+            `email` = '$email',
+            `phone` = '$phn',
+            `gender` = '$gndr',
+            `date_of_birth` = '$dob',
+            `language` = '$selectedLng',
+            `country` = '$cnt',
+            `file_name` = '$newFileName'
+        WHERE
+
+        id=$curr_id";
+    
 
         if ($conn->query($sql) === TRUE) {
             echo "record inserted successfully";
         } else {
             echo "Error: " . $sql . "<br>" . $conn->error;
         }
-        header("Location:http://10.10.10.17/listings.php#");
+        // echo("<script>
+        // windows.location.href='listings.php';
+        // </script>");
+        // header("Location:http://10.10.10.17/listings.php#");
     }
 
     ?>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-    <script src="js/validationUsingJquery.js"></script>
+    <!-- <script src="js/validationUsingJquery.js"></script> -->
+    <?php
+    if(!$_REQUEST['mode'] == 'edit')
+    echo('<script src="js/validationUsingJquery.js"></script>');
+    ?>
+    
+    
     <form name="applicationForm" id="applicationForm" method="post" enctype="multipart/form-data" action="">
         <table border="2" bordercolor="orange" align="center">
             <th colspan="2">Application Form</th>
@@ -208,7 +250,7 @@
                     <input type="radio" name="Gender" class="Gender"  value="Female" <?php 
                     if($mode == 'edit')
                     {
-                        if($gndr_id == 'Male'):?> checked <?php endif;
+                        if($gndr_id == 'Female'):?> checked <?php endif;
                     } 
                     ?>/>Female
                     <br />
@@ -256,13 +298,17 @@
                 <td align="middle">Country</td>
                 <td>
                     <select name="Country">
-                        <!-- <option id="Country" select="<?php echo $country_id ?>">--Select--</option> -->
-                        <?php
-                        $country_list = array("japan", "india", "nepal", "china", "usa", "canada", "Russia");
+                        <?php 
+                            if($mode != 'edit')
+                            echo("<option id='Country' >--Select--</option>");
+                            else
+                            echo "<option checked='checked' value=$country_id>$country_id</option>";
+                        
+                            $country_list = array("japan", "india", "nepal", "china", "usa", "canada", "Russia");
 
-                        foreach ($country_list as $item) {
-                            echo "<option value=$item>$item</option>";
-                        }
+                            foreach ($country_list as $item) {
+                                echo "<option value=$item>$item</option>";
+                            }
                         ?>
                     </select>
                     <br />
@@ -272,7 +318,7 @@
             <tr>
                 <td align="middle">File</td>
                 <td>
-                    <input type="file" name="File" id="File" value="dgyf" />
+                    <input type="file" name="File" id="File" value="<?php $file_name_id ?>" src="uploads/<?php $file_name_id ?>"/>
                     <br />
                     <span id="SFile"></span>
                     <?php 
@@ -280,7 +326,7 @@
                         if($mode == 'edit')
                         {
                             echo("<td>
-                            <img src='uploads/$file_name_id 'height='100px' width='100px'>
+                            <img src='uploads/$file_name_id' height='100px' width='100px'>
                             </td>");
                         }
 

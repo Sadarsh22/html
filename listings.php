@@ -1,5 +1,17 @@
 <?php 
 
+$where = '';
+if($_REQUEST['mode'] == 'search')
+{
+    $searchVal = $_REQUEST['val']; 
+    $where = "And first_name like '%".$searchVal."%'"
+    ." or last_name like '%".$searchVal."%'"
+    ." or email like '%".$searchVal."%'"
+    ." or phone like '%".$searchVal."%'";
+
+}
+
+
 if($_REQUEST['mode'] == 'delete')
 {
     error_reporting(E_ALL);
@@ -12,7 +24,7 @@ if($_REQUEST['mode'] == 'delete')
     header("Location:http://10.10.10.17/listings.php#");
 }
 
-if($_REQUEST['id'])
+if($_REQUEST['id'] && $_REQUEST['mode'] == 'deleteAll')
 {
     $arr = $_REQUEST['id'];
     $arr=explode(',',$arr);
@@ -47,7 +59,7 @@ if($_REQUEST['id'])
         }
 
         #deleteAll {
-            margin-left: 5%;
+            margin-left: 17%;
             margin-top: 1%;
         }
     </style>
@@ -58,7 +70,19 @@ if($_REQUEST['id'])
 
         $(document).ready(function() {
             $('.Delete').click(function() {
-                confirm("are you sure you want to delete");
+                if(confirm("are you sure you want to delete"))
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            });
+
+            $('#search').click(function(){
+                var val = $('#searchbar').val();
+                window.location.href="http://10.10.10.17/listings.php?val="+val+"&mode=search";
             });
         })
 
@@ -113,11 +137,14 @@ if($_REQUEST['id'])
                 alert("please select atleast one record to delete");
                 return false;
             } else if (c > 0) {
-                confirm("are you sure you want to delete");
-                window.location.href="http://10.10.10.17/listings.php?id="+delId
+                 if(confirm("are you sure you want to delete"))
+                    window.location.href="http://10.10.10.17/listings.php?id="+delId+"&mode=deleteAll";
+                else
+                    window.location.href="http://10.10.10.17/listings.php";
             }
             return true;
         }
+
     </script>
 
     <div id='header'>
@@ -134,8 +161,9 @@ if($_REQUEST['id'])
     error_reporting(E_ALL);
 
     $conn = new mysqli($hostname, $username, $password, 'adarsh');
+    
 
-    $query = "select id, first_name,last_name,email,phone,file_name  from customer where deleted=0";
+    $query = "select id, first_name,last_name,email,phone,file_name  from customer where deleted=0"." ".$where;
     $queryResult = mysqli_query($conn, $query);
     $c = 0;
     echo "<table border='1' bordercolor='orange' align='center' id='listingTable'>";
@@ -167,7 +195,7 @@ if($_REQUEST['id'])
         <td> <img src="uploads/<?php echo $queryRow['file_name']; ?>" height="100px" width="100px"> </td>
         <td> <a href="view.php?id=<?php echo $queryRow['id']; ?>">View</a> | 
         <a href="index.php?id=<?php echo $queryRow['id']?> &mode=edit"> <button> Edit </button> </a> | 
-        <a href="listings.php?id=<?php echo $queryRow['id'] ?> &mode=delete "> <button class='Delete'> Delete </button> </a></td></tr>
+        <a href="listings.php?id=<?php echo $queryRow['id'] ?> &mode=delete " class='Delete'> <button > Delete </button> </a></td></tr>
 <?php
         $c++;
     }

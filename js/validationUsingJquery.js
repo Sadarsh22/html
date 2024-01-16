@@ -136,6 +136,7 @@ $(function () {
       return false;
     }
 
+
     alert(inputFile.files.length);
     if (inputFile.files.length == 0) {
       $("#SFile").html("Please upload the image");
