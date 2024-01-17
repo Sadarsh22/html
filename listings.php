@@ -1,46 +1,6 @@
 <?php 
-
 $where = '';
-if($_REQUEST['mode'] == 'search')
-{
-    $searchVal = $_REQUEST['val']; 
-    $where = "And first_name like '%".$searchVal."%'"
-    ." or last_name like '%".$searchVal."%'"
-    ." or email like '%".$searchVal."%'"
-    ." or phone like '%".$searchVal."%'";
-
-}
-
-
-if($_REQUEST['mode'] == 'delete')
-{
-    error_reporting(E_ALL);
-    include 'login_credentials.php';
-    $conn = new mysqli($hostname, $username, $password, 'adarsh');
-    $curr_id = $_REQUEST['id'];
-    $delQuery =  "UPDATE customer SET deleted=1 WHERE id=$curr_id";
-    mysqli_query($conn, $delQuery);
-
-    header("Location:http://10.10.10.17/listings.php#");
-}
-
-if($_REQUEST['id'] && $_REQUEST['mode'] == 'deleteAll')
-{
-    $arr = $_REQUEST['id'];
-    $arr=explode(',',$arr);
-    foreach($arr as $item)
-    {
-        include 'login_credentials.php';
-        $conn = new mysqli($hostname, $username, $password, 'adarsh');
-        $id = $item;
-        $sql = "update customer set deleted = 1 where id = $id";
-        mysqli_query($conn,$sql);
-    }
-    header("Location:http://10.10.10.17/listings.php#");
-}
 ?>
-
-
 
 <html>
 <title>Index Page</title>
@@ -62,11 +22,64 @@ if($_REQUEST['id'] && $_REQUEST['mode'] == 'deleteAll')
             margin-left: 17%;
             margin-top: 1%;
         }
+
+        #modal {
+          background-color: goldenrod;
+          /* display: none; */
+          position: fixed;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          padding: 20px;
+          border: 1px solid #ccc;
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        #details {
+          text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+          letter-spacing: 2px;
+          line-height: 1.5;
+          /* text-transform: uppercase; */
+          font-size: 18px;
+          font-weight: bold;
+          font-family: "Arial", sans-serif;
+          color: #333;
+          text-align: left;
+        }
+
+        #modalButton {
+          background-color: bisque;
+          font-size: 25px;
+          margin: 10px;
+          padding: 10px;
+          border-radius: 10px;
+        }
+
     </style>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-    <script>
 
+        <script>
+        function deleteBtn(id,md)
+        {
+            $(document).ready(function(){
+                $.ajax({
+                type : 'GET',
+                url: "ajaxData.php",
+                data: {
+                id: id,
+                mode: md
+                }
+                })
+                .done(function(msg) { 
+                    $('#listingTable').html(msg);
+                })
+                });
+        }
+
+        </script>
+
+    <script>
 
         $(document).ready(function() {
             $('.Delete').click(function() {
@@ -82,7 +95,8 @@ if($_REQUEST['id'] && $_REQUEST['mode'] == 'deleteAll')
 
             $('#search').click(function(){
                 var val = $('#searchbar').val();
-                window.location.href="http://10.10.10.17/listings.php?val="+val+"&mode=search";
+                deleteBtn(val,"search");
+                // window.location.href="http://10.10.10.17/listings.php?val="+val+"&mode=search";
             });
         })
 
@@ -126,8 +140,6 @@ if($_REQUEST['id'] && $_REQUEST['mode'] == 'deleteAll')
             for (let i = 0; i < check.length; i++) 
             {
                 if (check[i].checked == true) {
-                console.log(check[i].value);
-               
                 delId[c]=check[i].value;
                 c++;
                 
@@ -138,12 +150,14 @@ if($_REQUEST['id'] && $_REQUEST['mode'] == 'deleteAll')
                 return false;
             } else if (c > 0) {
                  if(confirm("are you sure you want to delete"))
-                    window.location.href="http://10.10.10.17/listings.php?id="+delId+"&mode=deleteAll";
-                else
-                    window.location.href="http://10.10.10.17/listings.php";
+                 {
+                    delId = delId.toString();
+                    deleteBtn(delId,"deleteAll");
+                 }
             }
             return true;
         }
+
 
     </script>
 
@@ -163,9 +177,10 @@ if($_REQUEST['id'] && $_REQUEST['mode'] == 'deleteAll')
     $conn = new mysqli($hostname, $username, $password, 'adarsh');
     
 
-    $query = "select id, first_name,last_name,email,phone,file_name  from customer where deleted=0"." ".$where;
+    $query = "select * from customer where deleted=0"." ".$where;
     $queryResult = mysqli_query($conn, $query);
     $c = 0;
+    
     echo "<table border='1' bordercolor='orange' align='center' id='listingTable'>";
     echo "<tr>
       <th>
@@ -183,25 +198,29 @@ if($_REQUEST['id'] && $_REQUEST['mode'] == 'deleteAll')
       <th>Phone</th>
       <th>Image</th>
       <th>Action</th>
-    </tr>";
+    </tr><div id='listing_display'>";
+    
     while ($queryRow = mysqli_fetch_array($queryResult, MYSQLI_ASSOC)) {
     ?>
-        <tr id='$c'>
-            <td><input type='checkbox' id='all' name='all' value='<?php echo $queryRow['id'] ?>' onclick='singleCheckbox()''/></td>
+       <tr id='$c'>
+        <td><input type='checkbox' id='all' name='all' value='<?php echo $queryRow['id'] ?>' onclick='singleCheckbox()''/></td>
         <td><?php echo $queryRow['first_name']; ?></td>
         <td><?php echo $queryRow['last_name']; ?></td>
         <td><?php echo $queryRow['email']; ?></td>
         <td><?php echo $queryRow['phone']; ?></td>
         <td> <img src="uploads/<?php echo $queryRow['file_name']; ?>" height="100px" width="100px"> </td>
-        <td> <a href="view.php?id=<?php echo $queryRow['id']; ?>">View</a> | 
+        <td> <a href="#" class="view" ><button onclick="deleteBtn(<?php echo $queryRow['id'] ?> , 'view')"> View </button></a> | 
         <a href="index.php?id=<?php echo $queryRow['id']?> &mode=edit"> <button> Edit </button> </a> | 
-        <a href="listings.php?id=<?php echo $queryRow['id'] ?> &mode=delete " class='Delete'> <button > Delete </button> </a></td></tr>
+        <a href="#" class='Delete'> <button onclick="deleteBtn(<?php echo $queryRow['id'] ?> , 'delete')" > Delete </button> </a></td></tr>
+        
 <?php
         $c++;
     }
 ?>
+</div>
 </table>
     <button id="deleteAll" onclick="validateDeleteAll()">Delete All</button>
+
 </body>
 
 </html>

@@ -53,10 +53,10 @@
 
     <?php
 
-    // include 'login_credentials.php';
+    include 'login_credentials.php';
     //  ini_set('display_errors',1);
     //  ini_set('display_startup_errors',1);
-     error_reporting(E_ALL);
+    //  error_reporting(E_ALL);
 
     $fname = $_REQUEST['First_Name'];
     $lname = $_REQUEST['Last_Name'];
@@ -64,7 +64,7 @@
     $email = $_REQUEST['email'];
     $phn = $_REQUEST['Phone'];
     $gndr = $_REQUEST['Gender'];
-    echo($gndr_id);
+    // echo($gndr_id);
     $dob = $_REQUEST['dob'];
     $lng = $_REQUEST['Language'];
     $cnt = $_REQUEST['Country'];
@@ -78,7 +78,6 @@
     $uploadDirectory = "/uploads/";
 
     $fileName = $_FILES['File']['name'];
-    echo "img is->$fileName";
     $fileTmpName  = $_FILES['File']['tmp_name'];
     $fileExtension = strtolower(end(explode('.', $fileName)));
 
@@ -108,10 +107,17 @@
         }
 
         // $email_sql = "select email from customer";
-        // $email_arr = mysqli_num_rows($conn->query($email_sql));
+        // $email_arr = ($conn->query($email_sql));
+        // echo($email_arr);
+
+        // while ($queryRow = mysqli_fetch_array($email_arr)) {
+        //     echo($queryRow['email']);
+
+        // }
         
         // foreach($email_arr as $val)
         // {
+        //     echo($val);
         //     if($val == $email)
         //     echo('<script>
 
@@ -136,7 +142,7 @@
         } else {
             echo "Error: " . $sql . "<br>" . $conn->error;
         }
-        header("Location:http://10.10.10.17/listings.php#");
+        // header("Location:http://10.10.10.17/listings.php#");
     }
 
 
@@ -155,34 +161,53 @@
 
         $didUpload = move_uploaded_file($fileTmpName, $uploadPath);
 
-        $sql = "UPDATE
-            `customer`
-        SET
-            `modified_on_date` = '$datecreated',
-            `first_name` = '$fname',
-            `last_name` = '$lname',
-            `address` = '$addr',
-            `email` = '$email',
-            `phone` = '$phn',
-            `gender` = '$gndr',
-            `date_of_birth` = '$dob',
-            `language` = '$selectedLng',
-            `country` = '$cnt',
-            `file_name` = '$newFileName'
-        WHERE
+        $sql='';
 
-        id=$curr_id";
-    
+        if(!$fileName)
+        {
+            $sql = "UPDATE
+                `customer`
+            SET
+                `modified_on_date` = '$datecreated',
+                `first_name` = '$fname',
+                `last_name` = '$lname',
+                `address` = '$addr',
+                `email` = '$email',
+                `phone` = '$phn',
+                `gender` = '$gndr',
+                `date_of_birth` = '$dob',
+                `language` = '$selectedLng',
+                `country` = '$cnt'
+            WHERE
+            id=$curr_id";
+        }
+        else
+        {
+            $sql = "UPDATE
+                `customer`
+            SET
+                `modified_on_date` = '$datecreated',
+                `first_name` = '$fname',
+                `last_name` = '$lname',
+                `address` = '$addr',
+                `email` = '$email',
+                `phone` = '$phn',
+                `gender` = '$gndr',
+                `date_of_birth` = '$dob',
+                `language` = '$selectedLng',
+                `country` = '$cnt',
+                `file_name` = '$newFileName'
+            WHERE
+            id='$curr_id'";
+        }
+
 
         if ($conn->query($sql) === TRUE) {
             echo "record inserted successfully";
         } else {
             echo "Error: " . $sql . "<br>" . $conn->error;
         }
-        // echo("<script>
-        // windows.location.href='listings.php';
-        // </script>");
-        // header("Location:http://10.10.10.17/listings.php#");
+        header("Location:http://10.10.10.17/listings.php#");
     }
 
     ?>
@@ -318,14 +343,14 @@
             <tr>
                 <td align="middle">File</td>
                 <td>
-                    <input type="file" name="File" id="File" value="<?php $file_name_id ?>" src="uploads/<?php $file_name_id ?>"/>
+                    <input type="file" name="File" id="File" value="<?php $fileName ?>" src="uploads/<?php $fileName ?>"/>
                     <br />
                     <span id="SFile"></span>
                     <?php 
 
                         if($mode == 'edit')
                         {
-                            echo("<td>
+                            echo("<td id='imageName'>
                             <img src='uploads/$file_name_id' height='100px' width='100px'>
                             </td>");
                         }
