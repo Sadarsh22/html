@@ -25,7 +25,6 @@ $where = '';
 
         #modal {
             background-color: goldenrod;
-            /* display: none; */
             position: fixed;
             top: 50%;
             left: 50%;
@@ -33,6 +32,7 @@ $where = '';
             padding: 20px;
             border: 1px solid #ccc;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 30%;
         }
 
         #details {
@@ -77,6 +77,15 @@ $where = '';
     </script>
 
     <script>
+
+        function searchPeriod(){
+            var val = $('#selectNumber').val();
+            alert(val);
+            deleteBtn(val,'searchPeriod');
+        }
+
+
+
         function validateDelete(id, mode) {
             if (confirm("are you sure you want to delete"))
                 deleteBtn(id, mode);
@@ -146,11 +155,30 @@ $where = '';
             }
             return true;
         }
+
+        $(document).ready(function(){
+        var myArray = ['Today' , 'Yesterday', 'Last 7 days', 'Last 1 month', 'Last 3 months'];
+        for (let i = 0; i < myArray.length; i++) {
+        $("#selectNumber").append("<option value='" + myArray[i] + "'>" + myArray[i] + "</option>");
+        }
+
+        });
+        
     </script>
 
     <div id='header'>
         <input type="text" name="searchbar" id="searchbar" placeholder="Search" />&nbsp;
         <input type="button" name="search" id="search" value="Search" />&nbsp;
+
+
+
+            <select id="selectNumber">
+            <option>Choose a number</option>
+            </select>   
+            <button onclick="searchPeriod()">Search </button>
+
+
+
         <a href="index.php"><button>+New</button></a>
     </div>
 

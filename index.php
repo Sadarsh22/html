@@ -72,7 +72,7 @@
     $pswd = md5($_REQUEST['password']);
     $cnfpswd = md5($_REQUEST['confirmPassword']);
 
-    $datecreated = date('Y-m-d').' '.date("h:i:sa");
+    $datecreated = date('Y-m-d').' '.date("h:i:s");
 
     $currentDirectory = getcwd();
     $uploadDirectory = "/uploads/";
