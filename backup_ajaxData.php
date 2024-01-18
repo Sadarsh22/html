@@ -7,55 +7,45 @@
     $mode=$_GET['mode'];
     $where = '';
 
+// for displaying the value within the specified date
 
-//  for implementing the all search field logic together
-
-    if($mode == "searchAll")
+    if($mode == 'searchBetween')
     {
-        $searchVal = $_GET['searchbar'];
-        $searchBetween = $_GET['selectNumber'];
-        $start = $_GET['start'];
-        $end = $_GET['end'];
-
-        if($searchVal)
-        {
-            $where .= "And (first_name like '%".$searchVal."%'"
-            ." or last_name like '%".$searchVal."%'"
-            ." or email like '%".$searchVal."%'"
-            ." or phone like '%".$searchVal."%')".' ';
-        }
-        if($searchBetween != 'Choose a number')
-        {
-            if($searchBetween == "Today")
-            $where .= "AND (date(created_on_date) = CURRENT_DATE)";
-            else if($searchBetween == 'Yesterday')
-            $where .= "AND (date(created_on_date) = (CURRENT_DATE - INTERVAL 1 day))";
-            else if($searchBetween == 'Last 7 days')
-            $where .= "AND (date(created_on_date) >= (CURRENT_DATE - INTERVAL 7 day))";
-            else if($searchBetween == 'Last 1 month')
-            $where .= "AND (date(created_on_date) >= (CURRENT_DATE - INTERVAL 1 month))";
-            else if($searchBetween == 'Last 3 month')
-            $where .= "AND (date(created_on_date) >= (CURRENT_DATE - INTERVAL 3 month))";
-        }
-        else
-        {
-            if($start && $end)
-            {
-                $where.="AND (date(created_on_date) between '$start' and '$end')";
-            }
-            else
-            {
-                if($start)
-                {
-                    $where.="AND (date(created_on_date) >= '$start' and CURRENT_DATE )";
-                }
-                if($end)
-                {
-                    $where.="AND (date(created_on_date) >= '01-01-2023' and '$end' )";
-                }
-            }
-        }
+        $dt = explode(' ',$id);
+        $where ="AND date(created_on_date) between '$dt[0]' and '$dt[1]'";
     }
+
+
+//  for displaying the list of records within a specific period
+
+    if($mode == 'searchPeriod')
+    {
+        if($id == "Today")
+        $where ="AND date(created_on_date) = CURRENT_DATE";
+        else if($id == 'Yesterday')
+        $where = "AND date(created_on_date) = (CURRENT_DATE - INTERVAL 1 day)";
+        else if($id == 'Last 7 day')
+        $where = "AND date(created_on_date) >= (CURRENT_DATE - INTERVAL 7 day)";
+        else if($id == 'Last 1 month')
+        $where = "AND date(created_on_date) >= (CURRENT_DATE - INTERVAL 1 month)";
+        else if($id == 'Last 3 month')
+        $where = "AND date(created_on_date) >= (CURRENT_DATE - INTERVAL 3 month)";
+
+    }
+
+
+
+// for searching the desired value
+
+if($mode == 'search')
+{
+    $searchVal = $id; 
+    $where = "And first_name like '%".$searchVal."%'"
+    ." or last_name like '%".$searchVal."%'"
+    ." or email like '%".$searchVal."%'"
+    ." or phone like '%".$searchVal."%'";
+
+}
 
 // for deleing multiple rows at once
 
@@ -163,5 +153,4 @@ if($mode == 'view')
 <?php 
     }
 }
-// echo($query);
 ?>

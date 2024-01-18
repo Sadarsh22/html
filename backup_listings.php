@@ -79,34 +79,36 @@ $where = '';
 
     <script>
 
-        function callSearch()
+        function searchBetween()
         {
             $(document).ready(function(){
 
-                var searchbar = $('#searchbar').val();
-                var selectNumber = $('#selectNumber').val();
-                let start = $('#startDate').val();
-                let end = $('#endDate').val();
+            let start = $('#startDate').val();
+            let end = $('#endDate').val();
+            console.log(start);
 
-                $(document).ready(function() {
-                $.ajax({
-                        type: 'GET',
-                        url: "ajaxData.php",
-                        data: {
-                            searchbar: searchbar,
-                            mode: 'searchAll',
-                            selectNumber:selectNumber,
-                            start:start,
-                            end:end
-                        }
-                    })
-                    .done(function(msg) {
-                        $('#listingTable').html(msg);
-                    })
-                });
-
+            if(start && end)
+            {
+                if(start <= end)
+                deleteBtn(start+' '+end,"searchBetween");
+                else
+                alert("please enter the valid date");
+            }
+            else
+            {
+                alert("please select the date");
+            }
             });
         }
+
+
+        function searchPeriod(){
+            var val = $('#selectNumber').val();
+            alert(val);
+            deleteBtn(val,'searchPeriod');
+        }
+
+
 
         function validateDelete(id, mode) {
             if (confirm("are you sure you want to delete"))
@@ -114,6 +116,14 @@ $where = '';
             else
                 return false;
         }
+
+        $(document).ready(function(){
+                $('#search').click(function() {
+                var val = $('#searchbar').val();
+                deleteBtn(val, "search");
+            });
+        });
+
 
         function selectAllCheckboxes() {
             let val = document.getElementsByName("all");
@@ -182,17 +192,19 @@ $where = '';
 
     <div id='header'>
         <input type="text" name="searchbar" id="searchbar" placeholder="Search" />&nbsp;
+        <input type="button" name="search" id="search" value="Search" />&nbsp;
 
             <select id="selectNumber">
             <option>Choose a number</option>
             </select>   
+            <button onclick="searchPeriod()">Search </button>
 
         <a href="index.php"><button>+New</button></a>
 
         <h3>To search between given dates</h3>
         <input type="date" id="startDate" value=""/>
         <input type="date" id="endDate" value=""/>
-        <button onclick="callSearch()">Search</button>
+        <button onclick="searchBetween()">Search</button>
 
     </div>
 
