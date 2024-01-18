@@ -1,4 +1,4 @@
-<?php 
+<?php
 $where = '';
 ?>
 
@@ -24,81 +24,72 @@ $where = '';
         }
 
         #modal {
-          background-color: goldenrod;
-          /* display: none; */
-          position: fixed;
-          top: 50%;
-          left: 50%;
-          transform: translate(-50%, -50%);
-          padding: 20px;
-          border: 1px solid #ccc;
-          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            background-color: goldenrod;
+            /* display: none; */
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            padding: 20px;
+            border: 1px solid #ccc;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
 
         #details {
-          text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-          letter-spacing: 2px;
-          line-height: 1.5;
-          /* text-transform: uppercase; */
-          font-size: 18px;
-          font-weight: bold;
-          font-family: "Arial", sans-serif;
-          color: #333;
-          text-align: left;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            letter-spacing: 2px;
+            line-height: 1.5;
+            /* text-transform: uppercase; */
+            font-size: 18px;
+            font-weight: bold;
+            font-family: "Arial", sans-serif;
+            color: #333;
+            text-align: left;
         }
 
         #modalButton {
-          background-color: bisque;
-          font-size: 25px;
-          margin: 10px;
-          padding: 10px;
-          border-radius: 10px;
+            background-color: bisque;
+            font-size: 25px;
+            margin: 10px;
+            padding: 10px;
+            border-radius: 10px;
         }
-
     </style>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 
-        <script>
-        function deleteBtn(id,md)
-        {
-            $(document).ready(function(){
+    <script>
+        function deleteBtn(id, md) {
+            $(document).ready(function() {
                 $.ajax({
-                type : 'GET',
-                url: "ajaxData.php",
-                data: {
-                id: id,
-                mode: md
-                }
-                })
-                .done(function(msg) { 
-                    $('#listingTable').html(msg);
-                })
-                });
+                        type: 'GET',
+                        url: "ajaxData.php",
+                        data: {
+                            id: id,
+                            mode: md
+                        }
+                    })
+                    .done(function(msg) {
+                        $('#listingTable').html(msg);
+                    })
+            });
         }
-
-        </script>
+    </script>
 
     <script>
+        function validateDelete(id, mode) {
+            if (confirm("are you sure you want to delete"))
+                deleteBtn(id, mode);
+            else
+                return false;
+        }
 
-        $(document).ready(function() {
-            $('.Delete').click(function() {
-                if(confirm("are you sure you want to delete"))
-                {
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
-            });
-
-            $('#search').click(function(){
+        $(document).ready(function(){
+                $('#search').click(function() {
                 var val = $('#searchbar').val();
-                deleteBtn(val,"search");
-                // window.location.href="http://10.10.10.17/listings.php?val="+val+"&mode=search";
+                deleteBtn(val, "search");
             });
-        })
+        });
 
 
         function selectAllCheckboxes() {
@@ -134,31 +125,27 @@ $where = '';
         }
 
         function validateDeleteAll() {
-            var delId=[];
+            var delId = [];
             let check = document.getElementsByName("all");
             let c = 0;
-            for (let i = 0; i < check.length; i++) 
-            {
+            for (let i = 0; i < check.length; i++) {
                 if (check[i].checked == true) {
-                delId[c]=check[i].value;
-                c++;
-                
-            }
+                    delId[c] = check[i].value;
+                    c++;
+
+                }
             }
             if (c == 0) {
                 alert("please select atleast one record to delete");
                 return false;
             } else if (c > 0) {
-                 if(confirm("are you sure you want to delete"))
-                 {
+                if (confirm("are you sure you want to delete")) {
                     delId = delId.toString();
-                    deleteBtn(delId,"deleteAll");
-                 }
+                    deleteBtn(delId, "deleteAll");
+                }
             }
             return true;
         }
-
-
     </script>
 
     <div id='header'>
@@ -175,12 +162,12 @@ $where = '';
     error_reporting(E_ALL);
 
     $conn = new mysqli($hostname, $username, $password, 'adarsh');
-    
 
-    $query = "select * from customer where deleted=0"." ".$where;
+
+    $query = "select * from customer where deleted=0" . " " . $where;
     $queryResult = mysqli_query($conn, $query);
     $c = 0;
-    
+
     echo "<table border='1' bordercolor='orange' align='center' id='listingTable'>";
     echo "<tr>
       <th>
@@ -199,26 +186,28 @@ $where = '';
       <th>Image</th>
       <th>Action</th>
     </tr><div id='listing_display'>";
-    
+
     while ($queryRow = mysqli_fetch_array($queryResult, MYSQLI_ASSOC)) {
     ?>
-       <tr id='$c'>
-        <td><input type='checkbox' id='all' name='all' value='<?php echo $queryRow['id'] ?>' onclick='singleCheckbox()''/></td>
+        <tr id='$c'>
+            <td><input type='checkbox' id='all' name='all' value='<?php echo $queryRow['id'] ?>' onclick='singleCheckbox()''/></td>
         <td><?php echo $queryRow['first_name']; ?></td>
         <td><?php echo $queryRow['last_name']; ?></td>
         <td><?php echo $queryRow['email']; ?></td>
         <td><?php echo $queryRow['phone']; ?></td>
         <td> <img src="uploads/<?php echo $queryRow['file_name']; ?>" height="100px" width="100px"> </td>
-        <td> <a href="#" class="view" ><button onclick="deleteBtn(<?php echo $queryRow['id'] ?> , 'view')"> View </button></a> | 
-        <a href="index.php?id=<?php echo $queryRow['id']?> &mode=edit"> <button> Edit </button> </a> | 
-        <a href="#" class='Delete'> <button onclick="deleteBtn(<?php echo $queryRow['id'] ?> , 'delete')" > Delete </button> </a></td></tr>
-        
-<?php
+        <td> <a href="#" class="view" ><button onclick="deleteBtn(<?php echo $queryRow['id'] ?> , ' view')"> View </button></a> |
+                <a href="index.php?id=<?php echo $queryRow['id'] ?> &mode=edit"> <button> Edit </button> </a> |
+                <a href="#" class='Delete'> <button onclick="validateDelete(<?php echo $queryRow['id'] ?> , 'delete')"> Delete </button> </a>
+            </td>
+        </tr>
+
+    <?php
         $c++;
     }
-?>
-</div>
-</table>
+    ?>
+    </div>
+    </table>
     <button id="deleteAll" onclick="validateDeleteAll()">Delete All</button>
 
 </body>

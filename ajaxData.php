@@ -1,4 +1,8 @@
 <?php 
+
+    include 'login_credentials.php';
+    $conn = new mysqli($hostname, $username, $password, 'adarsh');
+
     $id=$_GET['id'];
     $mode=$_GET['mode'];
 
@@ -23,8 +27,6 @@ if($mode == 'deleteAll')
     $arr=explode(',',$arr);
     foreach($arr as $item)
     {
-        include 'login_credentials.php';
-        $conn = new mysqli($hostname, $username, $password, 'adarsh');
         $id = $item;
         $sql = "update customer set deleted = 1 where id = $id";
         mysqli_query($conn,$sql);
@@ -36,20 +38,11 @@ if($mode == 'deleteAll')
 // for deleting a single row 
     if($mode == 'delete')
     {
-        error_reporting(E_ALL);
-        include 'login_credentials.php';
-        $conn = new mysqli($hostname, $username, $password, 'adarsh');
         $curr_id = $_REQUEST['id'];
         $delQuery =  "UPDATE customer SET deleted=1 WHERE id=$curr_id";
         mysqli_query($conn, $delQuery);
+        // $("").load("";)
     }
-    
-    include 'login_credentials.php';
-    ini_set('display_errors', 1);
-    ini_set('display_startup_errors', 1);
-    error_reporting(E_ALL);
-
-    $conn = new mysqli($hostname, $username, $password, 'adarsh');
     
 
     $query = "select id, first_name,last_name,email,phone,file_name  from customer where deleted=0"." ".$where;
@@ -96,14 +89,6 @@ if($mode == 'deleteAll')
 // to view the entire data(modal)
 if($mode == 'view')
 {
-    include 'login_credentials.php';
-    ini_set('display_errors', 1);
-    ini_set('display_startup_errors', 1);
-    error_reporting(E_ALL);
-
-    $conn = new mysqli($hostname, $username, $password, 'adarsh');
-
-
     $query = "select * from customer where deleted=0 and id=$id";
     $queryResult = mysqli_query($conn, $query);
     while ($queryRow = mysqli_fetch_array($queryResult, MYSQLI_ASSOC)) {
