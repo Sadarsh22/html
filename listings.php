@@ -71,6 +71,11 @@ $where = '';
                         }
                     })
                     .done(function(msg) {
+                        if(msg)
+                        {
+                            $('#deleteAll').hide();
+                            $('#noRecord').html('No records found');
+                        }
                         $('#listingTable').html(msg);
                     })
             });
@@ -78,6 +83,16 @@ $where = '';
     </script>
 
     <script>
+
+        function callClear()
+        {
+            $(document).ready(function(){
+                $('#searchbar').val('');
+                $('#selectNumber').val('Choose a number');
+                $('#startDate').val('');
+                $('#endDate').val('');
+            });
+        }
 
         function callSearch()
         {
@@ -155,9 +170,9 @@ $where = '';
                 if (check[i].checked == true) {
                     delId[c] = check[i].value;
                     c++;
-
                 }
             }
+            
             if (c == 0) {
                 alert("please select atleast one record to delete");
                 return false;
@@ -181,7 +196,7 @@ $where = '';
     </script>
 
     <div id='header'>
-        <input type="text" name="searchbar" id="searchbar" placeholder="Search" />&nbsp;
+        <input type="text" name="searchbar" id="searchbar" placeholder="Search" value=""/>&nbsp;
 
             <select id="selectNumber">
             <option>Choose a number</option>
@@ -193,6 +208,8 @@ $where = '';
         <input type="date" id="startDate" value=""/>
         <input type="date" id="endDate" value=""/>
         <button onclick="callSearch()">Search</button>
+
+        <button onclick="callClear()" >clear</button>
 
     </div>
 
@@ -252,8 +269,18 @@ $where = '';
     ?>
     </div>
     </table>
+    <h3 id="noRecord" style="text-align: center;" ></h3>
     <button id="deleteAll" onclick="validateDeleteAll()">Delete All</button>
-
 </body>
 
 </html>
+<?php
+ if($queryRow == null)
+ {
+     echo("<script>
+     $('#deleteAll').hide();
+     $('#noRecord').html('No records found');
+     </script>
+     ");
+ }
+?>

@@ -1,10 +1,10 @@
 <?php 
-
         include 'login_credentials.php';
         $conn = new mysqli($hostname, $username, $password, 'adarsh');
-        ini_set('display_errors', 1);
-        ini_set('display_startup_errors', 1);
-        error_reporting(E_ALL);
+        $msg = '';
+        // ini_set('display_errors', 1);
+        // ini_set('display_startup_errors', 1);
+        // error_reporting(E_ALL);
 
         $mode = $_REQUEST['mode'];
 
@@ -84,13 +84,8 @@
         if($emailquery_data) echo("email found in db".$emailquery_data);
         if($emailquery_data)
         {
-            echo('
-                <script>
-                alert("email");
-                console.log("error in email");
-                document.getElementById("SEmail").innerHTML = "block";
-                </script>
-            ');
+            $msg = 'email already exists';
+           
         }
 
 
@@ -100,7 +95,7 @@
           VALUES ('$datecreated','$datecreated','$fname','$lname','$addr','$email','$phn','$gndr','$dob','$selectedLng','$cnt','$newFileName','$pswd')";
 
         $conn->query($sql);
-        // header("Location:http://10.10.10.17/listings.php#");
+        header("Location:http://10.10.10.17/listings.php#");
     }
 
 
@@ -152,7 +147,7 @@
             id='$curr_id'";
         }
 
-
+        $conn->query($sql);
         echo "record inserted successfully";
         header("Location:http://10.10.10.17/listings.php#");
     }
@@ -191,7 +186,7 @@
             <tr>
                 <td align="middle" valign="top">Address</td>
                 <td>
-                    <textarea name="address" id="address"><?php if($mode == 'edit'):?><?php echo trim($address_value) ?><?php endif; ?> </textarea>
+                    <textarea name="address" id="address"><?php if($mode == 'edit'):?><?php echo trim($address_value) ?><?php endif; ?></textarea>
                     <br />
                     <span id="SAddress"></span>
                 </td>
@@ -201,7 +196,7 @@
                 <td>
                     <input type="email" name="email" id="email" value="<?php if($mode == 'edit'):?><?php echo $email_id ?><?php endif; ?>" />
                     <br />
-                    <span id="SEmail"></span>
+                    <span id="SEmail"><?php print $msg; ?></span>
                 </td>
             </tr>
             <tr>
@@ -247,7 +242,6 @@
                     {
                         foreach($lang_id as $v)
                         if($v == 'English'):?> checked <?php endif; 
-    
                     }
                     ?>/>English
                     <input type="checkbox" name="Language[]" class="Language" value="Hindi" <?php 
@@ -303,7 +297,6 @@
                             <img src='uploads/$file_name_id' height='100px' width='100px'>
                             </td>");
                         }
-
                     ?>
                 </td>
             </tr>

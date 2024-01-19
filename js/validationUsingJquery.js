@@ -9,6 +9,7 @@ $(function () {
     var dateOfBirth = $("#dob").val();
     var lng = $(".Language:checked").val();
     var cnt = $("#Country").val();
+    alert(cnt);
     var inputFile = $("#File")[0];
     var passwd = $("#password").val();
     var cnfPasswd = $("#confirmPassword").val();
@@ -22,17 +23,17 @@ $(function () {
       return false;
     }
 
-    for (let i = 0; i < fname.length; i++) {
-      let val = fname.charAt(i);
-      if (!isNaN(val)) {
-        $("#SFirst_Name").html("No numeric values allowed here");
-        $("#First_Name").focus();
-        $("#First_Name").keypress(function () {
-          $("#SFirst_Name").hide();
-        });
-        return false;
-      }
-    }
+    // for (let i = 0; i < fname.length; i++) {
+    //   let val = fname.charAt(i);
+    //   if (!isNaN(val)) {
+    //     $("#SFirst_Name").html("No numeric values allowed here");
+    //     $("#First_Name").focus();
+    //     $("#First_Name").keypress(function () {
+    //       $("#SFirst_Name").hide();
+    //     });
+    //     return false;
+    //   }
+    // }
 
     if (lname == null || lname == "") {
       $("#SLast_Name").html("Last Name is required");
@@ -43,17 +44,17 @@ $(function () {
       return false;
     }
 
-    for (let i = 0; i < lname.length; i++) {
-      let val = lname.charAt(i);
-      if (!isNaN(val)) {
-        $("#SLast_Name").html("No numeric values allowed here");
-        $("Last_Name").focus();
-        $("#Last_Name").keypress(function () {
-          $("#SLast_Name").hide();
-        });
-        return false;
-      }
-    }
+    // for (let i = 0; i < lname.length; i++) {
+    //   let val = lname.charAt(i);
+    //   if (!isNaN(val)) {
+    //     $("#SLast_Name").html("No numeric values allowed here");
+    //     $("#Last_Name").focus();
+    //     $("#Last_Name").keypress(function () {
+    //       $("#SLast_Name").hide();
+    //     });
+    //     return false;
+    //   }
+    // }
 
     if (addr.length == 0) {
       $("#SAddress").html("Please Enter Your Address");
@@ -67,7 +68,7 @@ $(function () {
     if (emailID == "") {
       $("#SEmail").html("Email field should not be empty");
       $("#email").focus();
-      $("#email").keypress(function () {
+      $("#email").mouseover(function () {
         $("#SEmail").hide();
       });
       return false;
@@ -128,7 +129,7 @@ $(function () {
       return false;
     }
 
-    if (cnt == 0) {
+    if (cnt == '--select--') {
       $("#SCountry").html("please select your country");
       $("#Country").click(function () {
         $("#SCountry").hide();
@@ -136,7 +137,6 @@ $(function () {
       return false;
     }
 
-    alert(inputFile.files.length);
     if (inputFile.files.length == 0) {
       $("#SFile").html("Please upload the image");
       $("#File").click(function () {
@@ -175,7 +175,6 @@ $(function () {
     }
 
     if (passwd.length < 8) {
-      alert("password not less than 8 digits");
       $("#SPassword").html("Password must be of atleast 8 digits");
       $("#password").focus();
       $("#password").keypress(function () {
