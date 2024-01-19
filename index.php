@@ -1,14 +1,15 @@
 <?php 
 
+        include 'login_credentials.php';
+        $conn = new mysqli($hostname, $username, $password, 'adarsh');
+        ini_set('display_errors', 1);
+        ini_set('display_startup_errors', 1);
+        error_reporting(E_ALL);
+
         $mode = $_REQUEST['mode'];
 
         if($_REQUEST['mode'] == 'edit')
         {
-            // ini_set('display_errors', 1);
-            // ini_set('display_startup_errors', 1);
-            // error_reporting(E_ALL);
-            include 'login_credentials.php';
-            $conn = new mysqli($hostname, $username, $password, 'adarsh');
             $curr_id = $_REQUEST['id'];
             $query =  "Select * from customer WHERE id=$curr_id";
             $query_result = mysqli_query($conn, $query);
@@ -25,19 +26,9 @@
             $lang_id = $query_data['language'];
             $lang_id = explode(" ",$lang_id);
             $country_id = $query_data['country'];
-            $file_name_id = $query_data['file_name'];
-
-            // $dob = explode('-',$dob_id);
-            // print $dob1= '13/01/2024'; //$dob[2].'/'.$dob[1].'/'.$dob[0];
-
-            // echo($country_id);
-            
+            $file_name_id = $query_data['file_name'];   
         }
-
 ?>
-
-
-
 
 
 <!DOCTYPE html>
@@ -47,16 +38,12 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 </head>
 
 <body>
 
     <?php
-
-    include 'login_credentials.php';
-    //  ini_set('display_errors',1);
-    //  ini_set('display_startup_errors',1);
-    //  error_reporting(E_ALL);
 
     $fname = $_REQUEST['First_Name'];
     $lname = $_REQUEST['Last_Name'];
@@ -85,74 +72,39 @@
 
     $uploadPath = $currentDirectory . $uploadDirectory .  $newFileName;
 
-    // $files = glob('uploads/*');
-    // foreach($files as $f)
-    // {
-    //   if(is_file($f))
-    //   {
-    //     unlink($f);
-    //   }
-    // }
-
-    if (isset($_POST['Submit'])  && $mode !='edit' ) {
-        $didUpload = move_uploaded_file($fileTmpName, $uploadPath);
-    }
-
     if (isset($_POST['Submit'])  && $mode !='edit') {
-        // Create connection
-        $conn = new mysqli($hostname, $username, $password, 'adarsh');
-        // Check connection
-        if ($conn->connect_error) {
-            die("Connection failed: " . $conn->connect_error);
+        $didUpload = move_uploaded_file($fileTmpName, $uploadPath);
+        
+        //email server side validation
+        $email = $_REQUEST['email'];
+        echo($email);
+        $email_query = "select email from customer where deleted = 0 and email='$email'";
+        $emailQueryResult=mysqli_query($conn,$email_query);
+        $emailquery_data = mysqli_fetch_assoc($emailQueryResult);
+        if($emailquery_data) echo("email found in db".$emailquery_data);
+        if($emailquery_data)
+        {
+            echo('
+                <script>
+                alert("email");
+                console.log("error in email");
+                document.getElementById("SEmail").innerHTML = "block";
+                </script>
+            ');
         }
 
-        // $email_sql = "select email from customer";
-        // $email_arr = ($conn->query($email_sql));
-        // echo($email_arr);
-
-        // while ($queryRow = mysqli_fetch_array($email_arr)) {
-        //     echo($queryRow['email']);
-
-        // }
-        
-        // foreach($email_arr as $val)
-        // {
-        //     echo($val);
-        //     if($val == $email)
-        //     echo('<script>
-
-        //     alert("hello");
-        //     $("#SEmail").html("Email field should not be empty");
-        //     $("#email").focus();
-        //     $("#email").keypress(function () {
-        //       $("#SEmail").hide();
-        //     });
-        //     </script>');
-        // }
 
         $selectedLng = implode(' ',$lng);
 
-        echo "Connected successfully";
         $sql = "INSERT INTO customer(`created_on_date`,`modified_on_date`,`first_name`, `last_name`, `address`, `email`, `phone`, `gender`, `date_of_birth`, `language`, `country`, `file_name`, `password`) 
           VALUES ('$datecreated','$datecreated','$fname','$lname','$addr','$email','$phn','$gndr','$dob','$selectedLng','$cnt','$newFileName','$pswd')";
 
-        if ($conn->query($sql) === TRUE) {
-            echo "record inserted successfully";
-        } else {
-            echo "Error: " . $sql . "<br>" . $conn->error;
-        }
+        $conn->query($sql);
         // header("Location:http://10.10.10.17/listings.php#");
     }
 
 
-
     if (isset($_POST['Submit']) && $mode =='edit') {
-        // Create connection
-        $conn = new mysqli($hostname, $username, $password, 'adarsh');
-        // Check connection
-        if ($conn->connect_error) {
-            die("Connection failed: " . $conn->connect_error);
-        }
 
         $selectedLng = implode(' ',$lng);
 
@@ -201,21 +153,19 @@
         }
 
 
-        if ($conn->query($sql) === TRUE) {
-            echo "record inserted successfully";
-        } else {
-            echo "Error: " . $sql . "<br>" . $conn->error;
-        }
+        echo "record inserted successfully";
         header("Location:http://10.10.10.17/listings.php#");
     }
 
     ?>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-    <!-- <script src="js/validationUsingJquery.js"></script> -->
     <?php
+
     if(!$_REQUEST['mode'] == 'edit')
     echo('<script src="js/validationUsingJquery.js"></script>');
+    else
+    include 'verify.php';
     ?>
     
     
@@ -241,7 +191,7 @@
             <tr>
                 <td align="middle" valign="top">Address</td>
                 <td>
-                    <textarea name="address" id="address">  <?php if($mode == 'edit'):?><?php echo $address_value ?><?php endif; ?> </textarea>
+                    <textarea name="address" id="address"><?php if($mode == 'edit'):?><?php echo trim($address_value) ?><?php endif; ?> </textarea>
                     <br />
                     <span id="SAddress"></span>
                 </td>

@@ -117,7 +117,7 @@ if($mode == 'deleteAll')
         <td> <img src="uploads/<?php echo $queryRow['file_name']; ?>" height="100px" width="100px"> </td>
         <td> <a href="#" > <button onclick="deleteBtn(<?php echo $queryRow['id'] ?> , 'view')"> View </button> </a> | 
         <a href="index.php?id=<?php echo $queryRow['id']?> &mode=edit"> <button> Edit </button> </a> | 
-        <a href="#" class='Delete'> <button onclick="deleteBtn(<?php echo $queryRow['id'] ?> , 'delete')" > Delete </button> </a></td></tr>
+        <a href="#" class='Delete'> <button onclick="validateDelete(<?php echo $queryRow['id'] ?> , 'delete')" > Delete </button> </a></td></tr>
 <?php
         $c++;
     }

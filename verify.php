@@ -1,3 +1,5 @@
+<?php
+echo('<script>
 $(function () {
   $("#applicationForm").submit(function () {
     var fname = $("#First_Name").val();
@@ -136,73 +138,71 @@ $(function () {
       return false;
     }
 
-    alert(inputFile.files.length);
-    if (inputFile.files.length == 0) {
-      $("#SFile").html("Please upload the image");
-      $("#File").click(function () {
-        $("#SFile").hide();
-      });
-      return false;
-    }
-    let selectedFileExtension = $("#File").val().split(".").pop().toLowerCase();
-    let allowedTypes = ["jpg", "jpeg", "png"];
-
-    if (!allowedTypes.includes(selectedFileExtension)) {
-      $("#SFile").html("Only JPEG or PNG file accepted");
-      $("#File").val("");
-      $("#File").click(function () {
-        $("#SFile").hide();
-      });
-      return false;
-    }
-
-    if (inputFile.files[0].size / 1024 > 40) {
-      $("#SFile").html("file limit is 40KB only");
-      $("#SFile").focus();
-      $("#File").click(function () {
-        $("#SFile").hide();
-      });
-      return false;
+    if(inputFile.files.length != 0)
+    {
+      let selectedFileExtension = $("#File").val().split(".").pop().toLowerCase();
+      let allowedTypes = ["jpg", "jpeg", "png"];  
+      if (!allowedTypes.includes(selectedFileExtension)) {
+        $("#SFile").html("Only JPEG or PNG file accepted");
+        $("#File").val("");
+        $("#File").click(function () {
+          $("#SFile").hide();
+        });
+        return false;
+      }
+  
+  
+  
+      if (inputFile.files[0].size / 1024 > 40) {
+        $("#SFile").html("file limit is 40KB only");
+        $("#SFile").focus();
+        $("#File").click(function () {
+          $("#SFile").hide();
+        });
+        return false;
+      }  
     }
 
-    if (passwd.length == 0) {
-      $("#SPassword").html("Please Enter the Password");
-      $("#password").focus();
-      $("#password").keypress(function () {
-        $("#SPassword").hide();
-      });
-      return false;
+    
+    if (passwd.length != 0) {
+      if (passwd.length < 8) {
+        $("#SPassword").html("Password must be of atleast 8 digits");
+        $("#password").focus();
+        $("#password").keypress(function () {
+          $("#SPassword").hide();
+        });
+        return false;
+      }
+  
+      if (cnfPasswd.length == 0) {
+        $("#SConfirmpassword").html("Please confirm your password");
+        $("#confirmPassword").focus();
+        $("#confirmPassword").keypress(function () {
+          $("#SConfirmpassword").hide();
+        });
+        return false;
+      }
     }
 
-    if (passwd.length < 8) {
-      alert("password not less than 8 digits");
-      $("#SPassword").html("Password must be of atleast 8 digits");
-      $("#password").focus();
-      $("#password").keypress(function () {
-        $("#SPassword").hide();
-      });
-      return false;
+    cnfPasswd = $("#confirmPassword").val();
+    if(cnfPasswd.length > 0)
+    {
+      if (passwd != cnfPasswd) {
+        $("#SConfirmpassword").html("Both passwords must be the same");
+        $("#confirmPassword").focus();
+        $("#confirmPassword").keypress(function () {
+          $("#SConfirmpassword").hide();
+        });
+        return false;
+      }
     }
 
-    if (cnfPasswd.length == 0) {
-      $("#SConfirmpassword").html("Please confirm your password");
-      $("#confirmPassword").focus();
-      $("#confirmPassword").keypress(function () {
-        $("#SConfirmpassword").hide();
-      });
-      return false;
-    }
-    if (passwd != cnfPasswd) {
-      $("#SConfirmpassword").html("Both passwords must be the same");
-      $("#confirmPassword").focus();
-      $("#confirmPassword").keypress(function () {
-        $("#SConfirmpassword").hide();
-      });
-      return false;
-    }
     return true;
   });
 });
 
 
 
+
+    </script>')
+?>
