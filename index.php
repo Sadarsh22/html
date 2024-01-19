@@ -265,10 +265,10 @@
             <tr>
                 <td align="middle">Country</td>
                 <td>
-                    <select name="Country">
+                    <select name="Country" id='Country'>
                         <?php 
                             if($mode != 'edit')
-                            echo("<option id='Country' >--Select--</option>");
+                            echo("<option  >--Select--</option>");
                             else
                             echo "<option checked='checked' value=$country_id>$country_id</option>";
                         

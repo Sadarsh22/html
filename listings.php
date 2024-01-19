@@ -277,6 +277,7 @@ $where = '';
 <?php
  if($queryRow == null)
  {
+    ECHO("at end");
      echo("<script>
      $('#deleteAll').hide();
      $('#noRecord').html('No records found');

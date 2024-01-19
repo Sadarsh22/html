@@ -8,8 +8,7 @@ $(function () {
     var gndr = $(".Gender:checked").val();
     var dateOfBirth = $("#dob").val();
     var lng = $(".Language:checked").val();
-    var cnt = $("#Country").val();
-    alert(cnt);
+    // var cnt = $("#Country").val();
     var inputFile = $("#File")[0];
     var passwd = $("#password").val();
     var cnfPasswd = $("#confirmPassword").val();
@@ -129,9 +128,9 @@ $(function () {
       return false;
     }
 
-    if (cnt == '--select--') {
+    if ($("#Country").val() == '--Select--') {
       $("#SCountry").html("please select your country");
-      $("#Country").click(function () {
+      $("#Country").mouseover(function () {
         $("#SCountry").hide();
       });
       return false;
