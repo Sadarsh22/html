@@ -6,6 +6,7 @@ $where = '';
 <title>Listing Page</title>
 
 <head>
+    <link rel="stylesheet" href=" 	https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
 </head>
 
 <body>
@@ -60,6 +61,7 @@ $where = '';
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 
     <script>
+        //master function for ajax calls
         function deleteBtn(id, md) {
             $(document).ready(function() {
                 $.ajax({
@@ -71,11 +73,7 @@ $where = '';
                         }
                     })
                     .done(function(msg) {
-                        if(msg)
-                        {
-                            $('#deleteAll').hide();
-                            $('#noRecord').html('No records found');
-                        }
+                        alert('ajax success');
                         $('#listingTable').html(msg);
                     })
             });
@@ -83,7 +81,7 @@ $where = '';
     </script>
 
     <script>
-
+        // to clear the search field 
         function callClear()
         {
             $(document).ready(function(){
@@ -91,9 +89,11 @@ $where = '';
                 $('#selectNumber').val('Choose a number');
                 $('#startDate').val('');
                 $('#endDate').val('');
+                callSearch();
             });
         }
 
+        //to search based on the given user preferences
         function callSearch()
         {
             $(document).ready(function(){
@@ -123,6 +123,7 @@ $where = '';
             });
         }
 
+        //to delete single records
         function validateDelete(id, mode) {
             if (confirm("are you sure you want to delete"))
                 deleteBtn(id, mode);
@@ -130,6 +131,7 @@ $where = '';
                 return false;
         }
 
+        //to select all checkboxes
         function selectAllCheckboxes() {
             let val = document.getElementsByName("all");
 
@@ -162,6 +164,7 @@ $where = '';
             }
         }
 
+        //to delete multiple records
         function validateDeleteAll() {
             var delId = [];
             let check = document.getElementsByName("all");
@@ -227,7 +230,7 @@ $where = '';
     $queryResult = mysqli_query($conn, $query);
     $c = 0;
 
-    echo "<table border='1' bordercolor='orange' align='center' id='listingTable'>";
+    echo "<table border='1' bordercolor='orange' align='center' id='listingTable' class='table table-striped'>";
     echo "<tr>
       <th>
         <input
@@ -275,9 +278,8 @@ $where = '';
 
 </html>
 <?php
- if($queryRow == null)
+ if($c == 0)
  {
-    ECHO("at end");
      echo("<script>
      $('#deleteAll').hide();
      $('#noRecord').html('No records found');

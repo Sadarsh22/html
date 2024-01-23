@@ -39,9 +39,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <link rel="stylesheet" href=" 	https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+
 </head>
 
-<body>
+<body> 
 
     <?php
 
@@ -58,7 +60,6 @@
     $fl = $_REQUEST['File'];
     $pswd = md5($_REQUEST['password']);
     $cnfpswd = md5($_REQUEST['confirmPassword']);
-
     $datecreated = date('Y-m-d').' '.date("h:i:s");
 
     $currentDirectory = getcwd();
@@ -75,27 +76,45 @@
     if (isset($_POST['Submit'])  && $mode !='edit') {
         $didUpload = move_uploaded_file($fileTmpName, $uploadPath);
         
-        //email server side validation
+//email server side validation-------------------------------------------------------------
+        $fname = $_REQUEST['First_Name'];
         $email = $_REQUEST['email'];
-        echo($email);
+        $lname = $_REQUEST['Last_Name'];
+        $addr = $_REQUEST['address'];
+        $email = $_REQUEST['email'];
+        $phn = $_REQUEST['Phone'];
+        $gndr = $_REQUEST['Gender'];
+        $dob = $_REQUEST['dob'];
+        $lng = $_REQUEST['Language'];
+        $cnt = $_REQUEST['Country'];
+        $fl = $_REQUEST['File'];
         $email_query = "select email from customer where deleted = 0 and email='$email'";
         $emailQueryResult=mysqli_query($conn,$email_query);
         $emailquery_data = mysqli_fetch_assoc($emailQueryResult);
-        if($emailquery_data) echo("email found in db".$emailquery_data);
         if($emailquery_data)
         {
             $msg = 'email already exists';
-           
+
+            echo("<script>
+            alert('in script');
+            $(document).ready(function(){
+                $('#email').click(function(){
+                  $('#SEmail').hide();
+                })
+              });
+           </script>");
         }
+//-------------------------------------------------------
+        else
+        {
+            $selectedLng = implode(' ',$lng);
 
+            $sql = "INSERT INTO customer(`created_on_date`,`modified_on_date`,`first_name`, `last_name`, `address`, `email`, `phone`, `gender`, `date_of_birth`, `language`, `country`, `file_name`, `password`) 
+            VALUES ('$datecreated','$datecreated','$fname','$lname','$addr','$email','$phn','$gndr','$dob','$selectedLng','$cnt','$newFileName','$pswd')";
 
-        $selectedLng = implode(' ',$lng);
-
-        $sql = "INSERT INTO customer(`created_on_date`,`modified_on_date`,`first_name`, `last_name`, `address`, `email`, `phone`, `gender`, `date_of_birth`, `language`, `country`, `file_name`, `password`) 
-          VALUES ('$datecreated','$datecreated','$fname','$lname','$addr','$email','$phn','$gndr','$dob','$selectedLng','$cnt','$newFileName','$pswd')";
-
-        $conn->query($sql);
-        header("Location:http://10.10.10.17/listings.php#");
+            $conn->query($sql);
+            header("Location:http://10.10.10.17/listings.php#");
+        }
     }
 
 
@@ -103,14 +122,37 @@
 
         $selectedLng = implode(' ',$lng);
 
-        echo "Connected successfully";
-
         $didUpload = move_uploaded_file($fileTmpName, $uploadPath);
 
         $sql='';
 
-        if(!$fileName)
+        //--------------------------------------------------------------------------
+
+        $email = $_REQUEST['email'];
+       
+        $email_query = "select email from customer where deleted = 0 and email='$email'";
+        $emailQueryResult=mysqli_query($conn,$email_query);
+        $emailquery_data = mysqli_fetch_assoc($emailQueryResult);
+        if($emailquery_data && $email != $email_id )
         {
+            $msg = 'email already exists';
+
+            echo("<script>
+            alert('in script');
+            $(document).ready(function(){
+                $('#email').click(function(){
+                  $('#SEmail').hide();
+                })
+              });
+           </script>");
+        }
+
+        //-----------------------------------------------------------------------------
+
+        else
+        
+        {   if(!$fileName)
+            {
             $sql = "UPDATE
                 `customer`
             SET
@@ -126,9 +168,9 @@
                 `country` = '$cnt'
             WHERE
             id=$curr_id";
-        }
-        else
-        {
+            }
+            else
+            {
             $sql = "UPDATE
                 `customer`
             SET
@@ -151,6 +193,7 @@
         echo "record inserted successfully";
         header("Location:http://10.10.10.17/listings.php#");
     }
+    }
 
     ?>
 
@@ -164,13 +207,13 @@
     ?>
     
     
-    <form name="applicationForm" id="applicationForm" method="post" enctype="multipart/form-data" action="">
-        <table border="2" bordercolor="orange" align="center">
-            <th colspan="2">Application Form</th>
+    <form name="applicationForm" id="applicationForm" method="post" enctype="multipart/form-data" action="" class="form-control form-control-lg">
+        <table border="1" align="center">
+            <th colspan="2" style="text-align: center;" >Application Form</th>
             <tr>
                 <td align="middle">First_Name</td>
                 <td>
-                    <input type="text" name="First_Name" id="First_Name" value="<?php if($mode == 'edit'):?><?php echo $first_name ?><?php endif; ?>" />
+                    <input type="text" name="First_Name" id="First_Name" value="<?php if($mode !='edit') echo $fname; if($mode == 'edit'):?><?php echo $first_name ?><?php endif; ?>" />
                     <br />
                     <span id="SFirst_Name"></span>
                 </td>
@@ -178,7 +221,7 @@
             <tr>
                 <td align="middle">Last_Name</td>
                 <td>
-                    <input type="text" name="Last_Name" id="Last_Name" value="<?php if($mode == 'edit'):?><?php echo $last_name ?><?php endif; ?>" />
+                    <input type="text" name="Last_Name" id="Last_Name" value="<?php if($mode !='edit') echo $lname; if($mode == 'edit'):?><?php echo $last_name ?><?php endif; ?>" />
                     <br />
                     <span id="SLast_Name"></span>
                 </td>
@@ -186,7 +229,7 @@
             <tr>
                 <td align="middle" valign="top">Address</td>
                 <td>
-                    <textarea name="address" id="address"><?php if($mode == 'edit'):?><?php echo trim($address_value) ?><?php endif; ?></textarea>
+                    <textarea name="address" id="address"><?php if($mode !='edit') echo $addr; if($mode == 'edit'):?><?php echo trim($address_value) ?><?php endif; ?></textarea>
                     <br />
                     <span id="SAddress"></span>
                 </td>
@@ -196,13 +239,13 @@
                 <td>
                     <input type="email" name="email" id="email" value="<?php if($mode == 'edit'):?><?php echo $email_id ?><?php endif; ?>" />
                     <br />
-                    <span id="SEmail"><?php print $msg; ?></span>
+                    <span id="SEmail"><?php echo $msg; ?></span>
                 </td>
             </tr>
             <tr>
                 <td align="middle">Phone</td>
                 <td>
-                    <input type="text" name="Phone" id="Phone" value="<?php if($mode == 'edit'):?><?php echo $phn_id ?><?php endif; ?>" />
+                    <input type="text" name="Phone" id="Phone" value="<?php if($mode !='edit') echo $phn; if($mode == 'edit'):?><?php echo $phn_id ?><?php endif; ?>" />
                     <br />
                     <span id="SPhone"></span>
                 </td>
@@ -211,15 +254,15 @@
                 <td align="middle">Gender</td>
                 <td>
                     <input type="radio" name="Gender" class="Gender" value="Male" <?php 
-                    if($mode == 'edit')
+                    if($mode == 'edit' || $gndr == 'Male')
                     {
-                        if($gndr_id == 'Male'):?> checked <?php endif;
+                        if($gndr_id == 'Male' || $gndr == 'Male'):?> checked <?php endif;
                     }
                     ?>  />Male
                     <input type="radio" name="Gender" class="Gender"  value="Female" <?php 
-                    if($mode == 'edit')
+                    if($mode == 'edit' || $gndr == 'Female')
                     {
-                        if($gndr_id == 'Female'):?> checked <?php endif;
+                        if($gndr_id == 'Female' || $gndr == 'Female'):?> checked <?php endif;
                     } 
                     ?>/>Female
                     <br />
@@ -229,7 +272,7 @@
             <tr>
                 <td align="middle">Date of Birth</td>
                 <td>
-                    <input type="date" id="dob" name="dob" value="<?php echo $dob_id; ?>"/>
+                    <input type="date" id="dob" name="dob" value="<?php if($mode!='edit')echo $dob; else echo $dob_id; ?>"/>
                     <br />
                     <span id="SDob"></span>
                 </td>
@@ -238,6 +281,8 @@
                 <td align="middle">Language</td>
                 <td>
                     <input type="checkbox" name="Language[]" class="Language" value="English" <?php 
+                    if($lng)
+                    if(in_array("English",$lng)):?> checked <?php endif;
                     if($mode == 'edit')
                     {
                         foreach($lang_id as $v)
@@ -245,6 +290,8 @@
                     }
                     ?>/>English
                     <input type="checkbox" name="Language[]" class="Language" value="Hindi" <?php 
+                    if($lng)
+                    if(in_array("Hindi",$lng)):?> checked <?php endif;
                      if($mode == 'edit')
                     {
                         foreach($lang_id as $v)
@@ -252,6 +299,8 @@
                     }
                     ?>/>Hindi
                     <input type="checkbox" name="Language[]" class="Language" value="Bengali" <?php 
+                    if($lng)
+                    if(in_array("Bengali",$lng)):?> checked <?php endif;
                     if($mode == 'edit')
                     {
                         foreach($lang_id as $v)
@@ -267,6 +316,9 @@
                 <td>
                     <select name="Country" id='Country'>
                         <?php 
+                            if($cnt)
+                            echo "<option checked='checked' value=$cnt>$cnt</option>";
+
                             if($mode != 'edit')
                             echo("<option  >--Select--</option>");
                             else
@@ -275,7 +327,7 @@
                             $country_list = array("japan", "india", "nepal", "china", "usa", "canada", "Russia");
 
                             foreach ($country_list as $item) {
-                                echo "<option value=$item>$item</option>";
+                                echo "<option checked value=$item>$item</option>";
                             }
                         ?>
                     </select>
@@ -316,7 +368,7 @@
                     <span id="SConfirmpassword"></span>
                 </td>
             </tr>
-            <th colspan="2">
+            <th colspan="2" style="text-align: center;" >
                 <a href="listings.php"><button type="button">back</button></a>
                 <input type="submit" name="Submit" id="submit" value="Submit" />
                 <input type="button" name="Reset" id="reset" value="Reset" />

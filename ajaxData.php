@@ -86,28 +86,27 @@ if($mode == 'deleteAll')
     $query = "select * from customer where deleted=0"." ".$where;
     $queryResult = mysqli_query($conn, $query);
     $c = 0;
-    if($mode != 'deleteAll')
-    {
-        echo "<table border='1' bordercolor='orange' align='center' id='listingTable'>";
-        echo "<tr>
-          <th>
-            <input
-              type='checkbox'
-              id='all'
-              name='all'
-              value='0'
-              onclick='selectAllCheckboxes()'
-            />
-          </th>
-          <th>created on date</th>
-          <th>First Name</th>
-          <th>Last Name</th>
-          <th>Email</th>
-          <th>Phone</th>
-          <th>Image</th>
-          <th>Action</th>
-        </tr><div id='listing_display'>";
-    }
+   
+    echo "<table border='1' bordercolor='orange' align='center' id='listingTable' class='table table-striped'>";
+    echo "<tr>
+      <th>
+        <input
+          type='checkbox'
+          id='all'
+          name='all'
+          value='0'
+          onclick='selectAllCheckboxes()'
+        />
+      </th>
+      <th>created on date</th>
+      <th>First Name</th>
+      <th>Last Name</th>
+      <th>Email</th>
+      <th>Phone</th>
+      <th>Image</th>
+      <th>Action</th>
+    </tr><div id='listing_display'>";
+    
     while ($queryRow = mysqli_fetch_array($queryResult, MYSQLI_ASSOC)) {
     ?>
     <tr id='$c'>
@@ -166,4 +165,21 @@ if($mode == 'view')
 <?php 
     }
 }
+// to remove the delete all button and display no records found
+if($c == 0)
+ {
+     echo("<script>
+     $('#deleteAll').hide();
+     $('#noRecord').html('No records found');
+     </script>
+     ");
+ }
+ else
+ {
+    echo("<script>
+    $('#deleteAll').show();
+    $('#noRecord').html('');
+    </script>
+    ");
+ }
 ?>

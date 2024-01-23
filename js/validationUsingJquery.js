@@ -22,17 +22,17 @@ $(function () {
       return false;
     }
 
-    // for (let i = 0; i < fname.length; i++) {
-    //   let val = fname.charAt(i);
-    //   if (!isNaN(val)) {
-    //     $("#SFirst_Name").html("No numeric values allowed here");
-    //     $("#First_Name").focus();
-    //     $("#First_Name").keypress(function () {
-    //       $("#SFirst_Name").hide();
-    //     });
-    //     return false;
-    //   }
-    // }
+    for (let i = 0; i < fname.length; i++) {
+      let val = fname.charAt(i);
+      if (!isNaN(val)) {
+        $("#SFirst_Name").html("No numeric values allowed here");
+        $("#First_Name").focus();
+        $("#First_Name").keypress(function () {
+          $("#SFirst_Name").hide();
+        });
+        return false;
+      }
+    }
 
     if (lname == null || lname == "") {
       $("#SLast_Name").html("Last Name is required");
@@ -43,17 +43,17 @@ $(function () {
       return false;
     }
 
-    // for (let i = 0; i < lname.length; i++) {
-    //   let val = lname.charAt(i);
-    //   if (!isNaN(val)) {
-    //     $("#SLast_Name").html("No numeric values allowed here");
-    //     $("#Last_Name").focus();
-    //     $("#Last_Name").keypress(function () {
-    //       $("#SLast_Name").hide();
-    //     });
-    //     return false;
-    //   }
-    // }
+    for (let i = 0; i < lname.length; i++) {
+      let val = lname.charAt(i);
+      if (!isNaN(val)) {
+        $("#Last_Name").focus();
+        $("#SLast_Name").html("No numeric values allowed here");
+        $("#Last_Name").keypress(function () {
+          $("#SLast_Name").hide();
+        });
+        return false;
+      }
+    }
 
     if (addr.length == 0) {
       $("#SAddress").html("Please Enter Your Address");
@@ -201,6 +201,7 @@ $(function () {
     return true;
   });
 });
+
 
 
 
